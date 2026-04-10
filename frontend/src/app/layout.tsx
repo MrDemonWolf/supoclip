@@ -5,7 +5,6 @@ import "./globals.css";
 import { DataFastIdentity } from "@/components/datafast-identity";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FeedbackButton } from "@/components/feedback-button";
 
 const defaultMetadataBase = "http://localhost:3000";
 
@@ -90,8 +89,7 @@ export default function RootLayout({
         <TooltipProvider>
           {children}
           <DataFastIdentity />
-          <FeedbackButton />
-          <Toaster />
+<Toaster />
         </TooltipProvider>
       </body>
     </html>
