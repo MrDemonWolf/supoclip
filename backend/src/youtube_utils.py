@@ -46,6 +46,7 @@ class YouTubeDownloader:
             "format": "bestvideo*+bestaudio/best",
             "format_sort": ["res", "fps"],
             "merge_output_format": "mp4",
+            "postprocessors": [{"key": "FFmpegVideoRemuxer", "preferedformat": "mp4"}],
             "writesubtitles": False,
             "writeautomaticsub": False,
             "noplaylist": True,
@@ -199,7 +200,7 @@ def _remove_cached_downloads(temp_dir: Path, video_id: str) -> None:
         file_path
         for file_path in temp_dir.glob(f"{video_id}.*")
         if file_path.is_file()
-        and file_path.suffix.lower() in [".mp4", ".mkv", ".webm", ".mov", ".m4v"]
+        and file_path.suffix.lower() in [".mp4", ".mkv", ".webm", ".mov", ".m4v", ".ts"]
     ]
     if not cached_files:
         return
@@ -553,7 +554,7 @@ def _download_youtube_video_with_ytdlp(
                 file_path
                 for file_path in downloader.temp_dir.glob(f"{video_id}.*")
                 if file_path.is_file()
-                and file_path.suffix.lower() in [".mp4", ".mkv", ".webm"]
+                and file_path.suffix.lower() in [".mp4", ".mkv", ".webm", ".ts", ".mov", ".m4v"]
             ]
             if downloaded_files:
                 ranked_files = []
