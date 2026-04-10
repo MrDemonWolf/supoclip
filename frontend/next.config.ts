@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  outputFileTracingIncludes: {
+    '/**': ['./src/generated/prisma/libquery_engine-*'],
+  },
   // Skip ESLint during builds (generated Prisma code causes lint errors)
   eslint: {
     ignoreDuringBuilds: true,
