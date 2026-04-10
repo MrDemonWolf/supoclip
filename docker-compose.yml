@@ -206,7 +206,7 @@ services:
       - ./frontend/prisma:/app/prisma
     environment:
       - DATABASE_URL=postgresql://supoclip:supoclip_password@postgres:5432/supoclip
-    command: sh -c "npx --yes prisma@latest migrate deploy"
+    command: sh -c "npx --yes prisma@6 migrate deploy"
     depends_on:
       postgres:
         condition: service_healthy
