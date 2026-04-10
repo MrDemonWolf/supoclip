@@ -773,10 +773,10 @@ export default function Home() {
           <div className="flex-1 min-w-0">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-stone-900 mb-2">
-                Create New Clip
+                Create New Short
               </h2>
               <p className="text-stone-500">
-                Paste a YouTube or Twitch link, or upload a video — AI handles the rest.
+                Paste a YouTube or Twitch link, or upload a video — AI creates your TikTok &amp; YouTube Shorts-ready clips.
               </p>
             </div>
 

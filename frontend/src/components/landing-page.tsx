@@ -145,7 +145,7 @@ function getPlans() {
       name: "Pro",
       price: `$${proPriceMonthly}`,
       period: "/month",
-      description: "For power users who clip daily and need more generations.",
+      description: "For creators who make shorts daily and need more generations.",
       features: [
         proGenerationsLabel,
         "Everything in Free",
@@ -175,14 +175,14 @@ const STEPS = [
     num: "02",
     title: "AI finds the gold",
     description:
-      "Transcription, virality scoring, and segment detection surface the best moments.",
+      "Transcription, engagement scoring, and segment detection surface your best moments.",
     icon: Wand2,
   },
   {
     num: "03",
     title: "Export & publish",
     description:
-      "Get vertical, captioned, face-tracked clips ready for every platform.",
+      "Get 9:16 captioned clips ready for TikTok, YouTube Shorts & Reels.",
     icon: Share2,
   },
 ];
@@ -384,7 +384,7 @@ export default function LandingPage() {
               >
                 From long video
                 <br />
-                to viral clips
+                to TikTok &amp; Shorts
               </h1>
 
               <p
@@ -393,9 +393,9 @@ export default function LandingPage() {
                   animation: "landing-fade-in-up 0.6s ease-out 0.2s both",
                 }}
               >
-                AI-powered clipping that transcribes, scores virality, crops for
-                vertical, adds word-synced captions, and exports platform-ready
-                shorts.
+                AI-powered tool that transcribes, finds your best moments, crops
+                for vertical, adds word-synced captions, and exports
+                TikTok &amp; YouTube Shorts-ready clips.
               </p>
 
               <div
@@ -407,7 +407,7 @@ export default function LandingPage() {
                 {authEnabled ? (
                   <Link href="/sign-up">
                     <Button size="lg" className="px-8 h-12 text-sm">
-                      Start Clipping
+                      Start Creating
                       <ArrowRight className="w-4 h-4" />
                     </Button>
                   </Link>
@@ -440,7 +440,7 @@ export default function LandingPage() {
                 {[
                   { icon: ScanFace, label: "9:16 Auto-Crop" },
                   { icon: Type, label: "Word-Synced Captions" },
-                  { icon: Target, label: "Virality Scoring" },
+                  { icon: Target, label: "TikTok & Shorts Ready" },
                 ].map(({ icon: Icon, label }) => (
                   <div key={label} className="flex items-center gap-1.5">
                     <Icon className="w-3.5 h-3.5" />

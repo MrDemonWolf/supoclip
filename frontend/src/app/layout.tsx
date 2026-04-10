@@ -40,21 +40,21 @@ const isDataFastEnabled = Boolean(dataFastWebsiteId && dataFastDomain);
 
 export const metadata: Metadata = {
   title: "SupoClip",
-  description: "Turn long videos into viral-ready shorts.",
+  description: "Turn long videos into TikTok & YouTube Shorts-ready clips.",
   metadataBase: getMetadataBase(),
   icons: {
     icon: "/icon.png",
   },
   openGraph: {
     title: "SupoClip",
-    description: "Turn long videos into viral-ready shorts.",
+    description: "Turn long videos into TikTok & YouTube Shorts-ready clips.",
     siteName: "SupoClip",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "SupoClip",
-    description: "Turn long videos into viral-ready shorts.",
+    description: "Turn long videos into TikTok & YouTube Shorts-ready clips.",
   },
 };
 
