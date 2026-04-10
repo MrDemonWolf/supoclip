@@ -95,7 +95,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Copy Prisma generated client and schema (custom output path)
 COPY --from=builder --chown=nextjs:nodejs /app/src/generated ./src/generated
+COPY --from=builder --chown=nextjs:nodejs /app/src/generated/prisma/libquery_engine-* ./.next/server/
 COPY --from=builder /app/prisma ./prisma
+
+# Tell Prisma exactly where the engine binary is (bypasses all path search logic)
+ENV PRISMA_QUERY_ENGINE_LIBRARY=/app/src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node
 
 USER nextjs
 
