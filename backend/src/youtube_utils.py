@@ -216,6 +216,19 @@ def _remove_cached_downloads(temp_dir: Path, video_id: str) -> None:
             logger.warning("Failed to remove stale cache file %s: %s", cached_file, exc)
 
 
+def get_twitch_video_id(url: str) -> Optional[str]:
+    """Extract Twitch VOD ID from twitch.tv/videos/XXXXXXX URLs."""
+    if not isinstance(url, str) or not url.strip():
+        return None
+    match = re.search(r"twitch\.tv/videos/(\d+)", url.strip(), re.IGNORECASE)
+    return match.group(1) if match else None
+
+
+def get_platform_video_id(url: str) -> Optional[str]:
+    """Return a stable file-system-safe ID for YouTube or Twitch URLs."""
+    return get_youtube_video_id(url) or get_twitch_video_id(url)
+
+
 def get_youtube_video_id(url: str) -> Optional[str]:
     """
     Extract YouTube video ID from various URL formats.
@@ -263,6 +276,32 @@ def validate_youtube_url(url: str) -> bool:
     """Validate if URL is a proper YouTube URL."""
     video_id = get_youtube_video_id(url)
     return video_id is not None
+
+
+def _fetch_twitch_video_info_with_ytdlp(url: str) -> Dict[str, Any]:
+    video_id = get_twitch_video_id(url)
+    if not video_id:
+        raise ValueError(f"Invalid Twitch URL: {url}")
+
+    ydl_opts = _build_info_options()
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+
+    return {
+        "id": info.get("id", video_id),
+        "title": info.get("title"),
+        "description": info.get("description", ""),
+        "duration": info.get("duration"),
+        "uploader": info.get("uploader") or info.get("channel"),
+        "upload_date": info.get("upload_date"),
+        "view_count": info.get("view_count"),
+        "like_count": info.get("like_count"),
+        "thumbnail": info.get("thumbnail"),
+        "format_id": info.get("format_id"),
+        "resolution": info.get("resolution"),
+        "fps": info.get("fps"),
+        "filesize": info.get("filesize"),
+    }
 
 
 def _fetch_video_info_with_ytdlp(url: str) -> Dict[str, Any]:
@@ -365,6 +404,14 @@ def get_youtube_video_info(
 ) -> Optional[Dict[str, Any]]:
     del task_id  # Reserved for future provider-specific tracing.
 
+    # Handle Twitch VOD URLs via yt-dlp directly
+    if get_twitch_video_id(url):
+        try:
+            return _fetch_twitch_video_info_with_ytdlp(url)
+        except Exception as exc:
+            logger.warning("Failed to get Twitch video info for %s: %s", url, exc)
+            return None
+
     video_id = get_youtube_video_id(url)
     if not video_id:
         logger.error("Invalid YouTube URL: %s", url)
@@ -465,12 +512,12 @@ def _download_youtube_video_with_ytdlp(
     task_id: Optional[str] = None,
 ) -> Optional[Path]:
     """
-    Download YouTube video with optimized settings and retry logic.
+    Download YouTube or Twitch video with optimized settings and retry logic.
     Returns the path to the downloaded file, or None if download fails.
     """
-    logger.info(f"Starting YouTube download: {url}")
+    logger.info(f"Starting download: {url}")
 
-    video_id = get_youtube_video_id(url)
+    video_id = get_platform_video_id(url)
     if not video_id:
         logger.error(f"Could not extract video ID from URL: {url}")
         return None
@@ -567,12 +614,12 @@ def download_youtube_video(
     task_id: Optional[str] = None,
 ) -> Optional[Path]:
     """
-    Download YouTube video with Apify as the primary provider and yt-dlp fallback.
-    Returns the path to the downloaded file, or None if both providers fail.
+    Download YouTube or Twitch video with Apify as the primary provider (YouTube only)
+    and yt-dlp fallback. Returns the path to the downloaded file, or None on failure.
     """
-    logger.info("Starting YouTube download: %s", url)
+    logger.info("Starting download: %s", url)
 
-    video_id = get_youtube_video_id(url)
+    video_id = get_platform_video_id(url)
     if not video_id:
         logger.error("Could not extract video ID from URL: %s", url)
         return None
@@ -581,7 +628,7 @@ def download_youtube_video(
     _remove_cached_downloads(downloader.temp_dir, video_id)
 
     config = get_config()
-    if config.apify_api_token:
+    if config.apify_api_token and get_youtube_video_id(url):
         try:
             downloaded_path = download_youtube_video_with_apify(url, video_id)
             file_size = downloaded_path.stat().st_size

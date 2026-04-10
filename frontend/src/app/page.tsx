@@ -776,7 +776,7 @@ export default function Home() {
                 Create New Clip
               </h2>
               <p className="text-stone-500">
-                Paste a YouTube link or upload a video — AI handles the rest.
+                Paste a YouTube or Twitch link, or upload a video — AI handles the rest.
               </p>
             </div>
 
@@ -800,7 +800,7 @@ export default function Home() {
                     }`}
                   >
                     <Youtube className="w-4 h-4" />
-                    YouTube URL
+                    YouTube / Twitch
                   </button>
                   <button
                     type="button"
@@ -824,7 +824,7 @@ export default function Home() {
                     <Input
                       id="youtube-url"
                       type="url"
-                      placeholder="https://www.youtube.com/watch?v=..."
+                      placeholder="https://www.youtube.com/watch?v=... or https://www.twitch.tv/videos/..."
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       disabled={isLoading}

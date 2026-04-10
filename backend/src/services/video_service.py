@@ -14,6 +14,7 @@ from ..youtube_utils import (
     async_get_youtube_video_info,
     async_get_youtube_video_title,
     get_youtube_video_id,
+    get_twitch_video_id,
 )
 from ..video_utils import (
     get_video_transcript,
@@ -80,10 +81,10 @@ class VideoService:
         """
         try:
             title = await async_get_youtube_video_title(url)
-            return title or "YouTube Video"
+            return title or "Video"
         except Exception as e:
             logger.warning(f"Failed to get video title: {e}")
-            return "YouTube Video"
+            return "Video"
 
     @staticmethod
     async def generate_transcript(
@@ -243,9 +244,10 @@ class VideoService:
 
     @staticmethod
     def determine_source_type(url: str) -> str:
-        """Determine if source is YouTube or uploaded file."""
-        video_id = get_youtube_video_id(url)
-        return "youtube" if video_id else "video_url"
+        """Determine if source is YouTube/Twitch or an uploaded file."""
+        if get_youtube_video_id(url) or get_twitch_video_id(url):
+            return "youtube"
+        return "video_url"
 
     @staticmethod
     async def process_video_complete(
