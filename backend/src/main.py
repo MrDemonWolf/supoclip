@@ -125,7 +125,7 @@ async def start_task(request: Request):
 
     # Get font customization options from request
     font_options = data.get("font_options", {})
-    font_family = font_options.get("font_family", "TikTokSans-Regular")
+    font_family = font_options.get("font_family", "Roboto")
     font_size = font_options.get("font_size", 24)
     font_color = font_options.get("font_color", "#FFFFFF")
 
@@ -368,7 +368,7 @@ async def start_task_with_progress(request: Request):
 
     # Get font customization options from request
     font_options = data.get("font_options", {})
-    font_family = font_options.get("font_family", "TikTokSans-Regular")
+    font_family = font_options.get("font_family", "Roboto")
     font_size = font_options.get("font_size", 24)
     font_color = font_options.get("font_color", "#FFFFFF")
 
@@ -469,7 +469,7 @@ async def process_video_task(
     task_id: str,
     raw_source: dict,
     user_id: str,
-    font_family: str = "TikTokSans-Regular",
+    font_family: str = "Roboto",
     font_size: int = 24,
     font_color: str = "#FFFFFF",
     caption_template: str = "default",

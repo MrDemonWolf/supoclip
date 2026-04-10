@@ -19,7 +19,7 @@ async def process_video_task(
     url: str,
     source_type: str,
     user_id: str,
-    font_family: str = "TikTokSans-Regular",
+    font_family: str = "Roboto",
     font_size: int = 24,
     font_color: str = "#FFFFFF",
     caption_template: str = "default",

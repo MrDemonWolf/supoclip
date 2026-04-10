@@ -22,7 +22,7 @@ class TaskRepository:
         user_id: str,
         source_id: str,
         status: str = "processing",
-        font_family: str = "TikTokSans-Regular",
+        font_family: str = "Roboto",
         font_size: int = 24,
         font_color: str = "#FFFFFF",
         caption_template: str = "default",

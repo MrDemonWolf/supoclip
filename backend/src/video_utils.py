@@ -42,7 +42,7 @@ class VideoProcessor:
         self.font_color = font_color
         resolved_font = find_font_path(font_family, allow_all_user_fonts=True)
         if not resolved_font:
-            resolved_font = find_font_path("TikTokSans-Regular")
+            resolved_font = find_font_path("Roboto")
         if not resolved_font:
             resolved_font = find_font_path("THEBOLDFONT")
         self.font_path = str(resolved_font) if resolved_font else ""

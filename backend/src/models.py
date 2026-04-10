@@ -106,7 +106,7 @@ class Task(Base):
 
     # Font customization fields
     font_family: Mapped[Optional[str]] = mapped_column(
-        String(100), nullable=True, server_default=sql_text("'TikTokSans-Regular'")
+        String(100), nullable=True, server_default=sql_text("'Roboto'")
     )
     font_size: Mapped[Optional[int]] = mapped_column(
         Integer, nullable=True, server_default=sql_text("'24'")
