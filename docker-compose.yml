@@ -57,7 +57,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: supoclip-backend
-    platform: linux/amd64
     command: [".venv/bin/uvicorn", "src.main_refactored:app", "--host", "0.0.0.0", "--port", "8000"]
     ports:
       - "8000:8000"
@@ -119,7 +118,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: supoclip-worker
-    platform: linux/amd64
     command: [".venv/bin/arq", "src.workers.tasks.WorkerSettings"]
     volumes:
       - ./backend/src:/app/src
