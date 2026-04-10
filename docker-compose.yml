@@ -15,7 +15,7 @@ services:
         - BETTER_AUTH_URL=${BETTER_AUTH_URL}
     container_name: supoclip-frontend
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - ./frontend/src:/app/src
       - ./frontend/public:/app/public
