@@ -17,7 +17,7 @@ import { track } from "@/lib/datafast";
 import { formatSupportMessage, parseApiError } from "@/lib/api-error";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Youtube, CheckCircle, AlertCircle, Loader2, Palette, Type, Paintbrush, Film, Sparkles, Upload, Monitor, Menu, X, LogOut, List, Shield, Settings } from "lucide-react";
+import { ArrowRight, Youtube, Twitch, CheckCircle, AlertCircle, Loader2, Palette, Type, Paintbrush, Film, Sparkles, Upload, Monitor, Menu, X, LogOut, List, Shield, Settings } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import LandingPage from "@/components/landing-page";
 import { isLandingOnlyModeEnabled } from "@/lib/app-flags";
@@ -800,7 +800,8 @@ export default function Home() {
                     }`}
                   >
                     <Youtube className="w-4 h-4" />
-                    YouTube / Twitch
+                    <Twitch className="w-4 h-4" />
+                    Paste URL
                   </button>
                   <button
                     type="button"
@@ -820,11 +821,15 @@ export default function Home() {
                 {/* URL / Upload Input */}
                 {sourceType === "youtube" ? (
                   <div className="relative">
-                    <Youtube className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+                    {url.includes("twitch.tv") ? (
+                      <Twitch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-500" />
+                    ) : (
+                      <Youtube className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+                    )}
                     <Input
                       id="youtube-url"
                       type="url"
-                      placeholder="https://www.youtube.com/watch?v=... or https://www.twitch.tv/videos/..."
+                      placeholder="Paste a YouTube or Twitch video URL..."
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       disabled={isLoading}

@@ -95,7 +95,7 @@ class TaskService:
 
         # Get or generate title
         if not title:
-            if source_type == "youtube":
+            if source_type in ("youtube", "twitch"):
                 title = await self.video_service.get_video_title(url)
             else:
                 title = "Uploaded Video"
@@ -550,7 +550,7 @@ class TaskService:
             return
 
         video_path: Path
-        if source_type == "youtube":
+        if source_type in ("youtube", "twitch"):
             downloaded = await self.video_service.download_video(source_url)
             if not downloaded:
                 raise ValueError("Failed to download source video for regeneration")

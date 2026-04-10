@@ -173,7 +173,7 @@ class Source(Base):
 
     # Add check constraint for type enum
     __table_args__ = (
-        CheckConstraint("type IN ('youtube', 'video_url')", name="check_source_type"),
+        CheckConstraint("type IN ('youtube', 'twitch', 'video_url')", name="check_source_type"),
     )
 
     # Relationships - Source can have multiple tasks
@@ -181,8 +181,10 @@ class Source(Base):
 
     def decide_source_type(self, source_url: str) -> str:
         """Decide which type of source this is."""
-        if "youtube" in source_url:
+        if "youtube" in source_url or "youtu.be" in source_url:
             return "youtube"
+        elif "twitch.tv" in source_url:
+            return "twitch"
         else:
             return "video_url"
 

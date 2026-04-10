@@ -168,7 +168,7 @@ const STEPS = [
     num: "01",
     title: "Drop a link or file",
     description:
-      "Paste any YouTube URL or drag-and-drop your own video file.",
+      "Paste any YouTube or Twitch URL, or drag-and-drop your own video file.",
     icon: Youtube,
   },
   {

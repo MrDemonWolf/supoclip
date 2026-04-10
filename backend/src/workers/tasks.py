@@ -35,7 +35,7 @@ async def process_video_task(
         ctx: arq context (provides Redis connection and other utilities)
         task_id: Task ID to update
         url: Video URL or file path
-        source_type: "youtube" or "upload"
+        source_type: "youtube", "twitch", or "upload"
         user_id: User ID who created the task
         font_family: Font family for subtitles
         font_size: Font size for subtitles

@@ -245,8 +245,10 @@ class VideoService:
     @staticmethod
     def determine_source_type(url: str) -> str:
         """Determine if source is YouTube/Twitch or an uploaded file."""
-        if get_youtube_video_id(url) or get_twitch_video_id(url):
+        if get_youtube_video_id(url):
             return "youtube"
+        if get_twitch_video_id(url):
+            return "twitch"
         return "video_url"
 
     @staticmethod
@@ -281,7 +283,7 @@ class VideoService:
             if progress_callback:
                 await progress_callback(10, "Downloading video...", "processing")
 
-            if source_type == "youtube":
+            if source_type in ("youtube", "twitch"):
                 video_info = await async_get_youtube_video_info(url, task_id=task_id)
                 if video_info:
                     duration = video_info.get("duration", 0)
