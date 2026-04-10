@@ -4,6 +4,9 @@ import { PrismaClient } from "../generated/prisma";
 import { nextCookies } from "better-auth/next-js";
 
 const prisma = new PrismaClient();
+const isSelfHosted = ["1", "true", "yes"].includes(
+  (process.env.NEXT_PUBLIC_SELF_HOST ?? "").toLowerCase()
+);
 const disableSignUp = ["1", "true", "yes"].includes(
   (process.env.DISABLE_SIGN_UP ?? "").toLowerCase()
 );
@@ -47,6 +50,21 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     disableSignUp,
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          if (isSelfHosted) {
+            const count = await prisma.user.count();
+            if (count > 0) {
+              throw new Error("Sign-up is disabled: this is a single-user self-hosted instance.");
+            }
+          }
+          return { data: user };
+        },
+      },
+    },
   },
   plugins: [
     nextCookies(), // Enable Next.js cookie handling

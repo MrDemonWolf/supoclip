@@ -70,7 +70,7 @@ class Config:
         self.discord_feedback_webhook_url = self._get_optional_env("DISCORD_FEEDBACK_WEBHOOK_URL")
         self.discord_sales_webhook_url = self._get_optional_env("DISCORD_SALES_WEBHOOK_URL")
         self.default_processing_mode = os.getenv("DEFAULT_PROCESSING_MODE", "fast")
-        self.fast_mode_max_clips = int(os.getenv("FAST_MODE_MAX_CLIPS", "4"))
+        self.fast_mode_max_clips = int(os.getenv("FAST_MODE_MAX_CLIPS", "6"))
         self.fast_mode_transcript_model = os.getenv(
             "FAST_MODE_TRANSCRIPT_MODEL", "nano"
         )
