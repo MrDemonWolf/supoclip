@@ -16,10 +16,6 @@ services:
     container_name: supoclip-frontend
     ports:
       - "3001:3000"
-    volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
-      - ./frontend/prisma:/app/prisma
     environment:
       - NODE_ENV=${NODE_ENV:-development}
       - NEXT_TELEMETRY_DISABLED=1
