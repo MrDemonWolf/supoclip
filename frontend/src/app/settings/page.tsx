@@ -33,7 +33,7 @@ interface BillingSummary {
 }
 
 export default function SettingsPage() {
-  const [fontFamily, setFontFamily] = useState("TikTokSans-Regular");
+  const [fontFamily, setFontFamily] = useState("Roboto");
   const [fontSize, setFontSize] = useState(24);
   const [fontColor, setFontColor] = useState("#FFFFFF");
   const [completionEmails, setCompletionEmails] = useState(true);
@@ -321,7 +321,29 @@ export default function SettingsPage() {
                       </SelectItem>
                     ))}
                     {availableFonts.length === 0 && (
-                      <SelectItem value="TikTokSans-Regular">TikTok Sans Regular</SelectItem>
+                      <>
+                        <SelectItem value="Roboto">Roboto</SelectItem>
+                        <SelectItem value="Inter">Inter</SelectItem>
+                        <SelectItem value="Montserrat-Variable-wght">Montserrat</SelectItem>
+                        <SelectItem value="Poppins-ExtraBold">Poppins ExtraBold</SelectItem>
+                        <SelectItem value="BebasNeue-Regular">Bebas Neue</SelectItem>
+                        <SelectItem value="Oswald-Variable-wght">Oswald</SelectItem>
+                        <SelectItem value="Anton-Regular">Anton</SelectItem>
+                        <SelectItem value="BarlowCondensed-Bold">Barlow Condensed Bold</SelectItem>
+                        <SelectItem value="ArchivoBlack-Regular">Archivo Black</SelectItem>
+                        <SelectItem value="Bangers-Regular">Bangers</SelectItem>
+                        <SelectItem value="DMSans">DM Sans</SelectItem>
+                        <SelectItem value="LeagueSpartan">League Spartan</SelectItem>
+                        <SelectItem value="NunitoSans">Nunito Sans</SelectItem>
+                        <SelectItem value="OpenSans">Open Sans</SelectItem>
+                        <SelectItem value="Raleway-Variable-wght">Raleway</SelectItem>
+                        <SelectItem value="Rubik">Rubik</SelectItem>
+                        <SelectItem value="Sora">Sora</SelectItem>
+                        <SelectItem value="THEBOLDFONT">The Bold Font</SelectItem>
+                        <SelectItem value="TikTokSans-Regular">TikTok Sans Regular</SelectItem>
+                        <SelectItem value="Urbanist">Urbanist</SelectItem>
+                        <SelectItem value="WorkSans">Work Sans</SelectItem>
+                      </>
                     )}
                   </SelectContent>
                 </Select>
