@@ -78,6 +78,8 @@ model Task {
   cache_hit            Boolean   @default(false)
   error_code           String?   @db.VarChar(80)
   stage_timings_json   String?
+  progress             Int?
+  progress_message     String?
 
   created_at           DateTime  @default(now()) @db.Timestamptz
   updated_at           DateTime  @default(now()) @updatedAt @db.Timestamptz

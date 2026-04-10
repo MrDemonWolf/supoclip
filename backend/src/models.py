@@ -141,6 +141,8 @@ class Task(Base):
     )
     error_code: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
     stage_timings_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    progress: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    progress_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     completion_notification_sent_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
