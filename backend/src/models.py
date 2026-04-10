@@ -19,6 +19,11 @@ import uuid
 
 from .database import Base
 
+# NOTE: These SQLAlchemy models are DOCUMENTATION ONLY.
+# Schema is owned by Prisma (frontend/prisma/schema.prisma).
+# Migrations run via `prisma migrate deploy` — never via Base.metadata.create_all().
+# Update these models to match when the Prisma schema changes.
+
 
 def generate_uuid_string():
     """Generate a UUID as a string for compatibility with Prisma"""

@@ -104,6 +104,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -163,6 +165,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       backend:
         condition: service_healthy
 
@@ -193,6 +197,21 @@ services:
       timeout: 10s
       retries: 3
 
+  # Runs Prisma migrations once before backend/frontend start
+  migrate:
+    image: node:20-alpine
+    container_name: supoclip-migrate
+    working_dir: /app
+    volumes:
+      - ./frontend/prisma:/app/prisma
+    environment:
+      - DATABASE_URL=postgresql://supoclip:supoclip_password@postgres:5432/supoclip
+    command: sh -c "npx --yes prisma@latest migrate deploy"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
   # PostgreSQL database for storing video metadata, user data, etc.
   postgres:
     image: postgres:15-alpine
@@ -203,7 +222,6 @@ services:
       POSTGRES_PASSWORD: supoclip_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U supoclip -d supoclip"]

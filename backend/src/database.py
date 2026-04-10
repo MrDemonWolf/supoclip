@@ -1,8 +1,6 @@
 import os
-from pathlib import Path
 
 from dotenv import load_dotenv
-from sqlalchemy import text
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -93,45 +91,10 @@ async def get_db():
 
 
 # Initialize database
+# Schema is owned by Prisma. Migrations run via `prisma migrate deploy` in the
+# migrate service before the backend starts. This function is a no-op DDL-wise.
 async def init_db():
-    async with get_engine().begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-        await conn.execute(
-            text(
-                """
-                CREATE TABLE IF NOT EXISTS schema_migrations (
-                    version VARCHAR(255) PRIMARY KEY,
-                    applied_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-                )
-                """
-            )
-        )
-
-        migrations_dir = Path(__file__).parent / "migrations" / "sql"
-        if migrations_dir.exists():
-            files = sorted([p for p in migrations_dir.glob("*.sql") if p.is_file()])
-            for migration_file in files:
-                version = migration_file.name
-                already_applied = await conn.execute(
-                    text(
-                        "SELECT 1 FROM schema_migrations WHERE version = :version LIMIT 1"
-                    ),
-                    {"version": version},
-                )
-                if already_applied.scalar() is not None:
-                    continue
-
-                sql = migration_file.read_text()
-                # asyncpg doesn't support multiple statements in one execute(),
-                # so split on semicolons and run each statement individually
-                for statement in sql.split(";"):
-                    statement = statement.strip()
-                    if statement:
-                        await conn.execute(text(statement))
-                await conn.execute(
-                    text("INSERT INTO schema_migrations (version) VALUES (:version)"),
-                    {"version": version},
-                )
+    pass
 
 
 # Close database connections

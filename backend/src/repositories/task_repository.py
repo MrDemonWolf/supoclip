@@ -31,58 +31,33 @@ class TaskRepository:
     ) -> str:
         """Create a new task and return its ID."""
         task_id = str(uuid4())
-        try:
-            result = await db.execute(
-                text("""
-                    INSERT INTO tasks (
-                        id, user_id, source_id, status, font_family, font_size, font_color,
-                        caption_template, include_broll, processing_mode,
-                        created_at, updated_at
-                    )
-                    VALUES (
-                        :task_id, :user_id, :source_id, :status, :font_family, :font_size, :font_color,
-                        :caption_template, :include_broll, :processing_mode,
-                        NOW(), NOW()
-                    )
-                    RETURNING id
-                """),
-                {
-                    "task_id": task_id,
-                    "user_id": user_id,
-                    "source_id": source_id,
-                    "status": status,
-                    "font_family": font_family,
-                    "font_size": font_size,
-                    "font_color": font_color,
-                    "caption_template": caption_template,
-                    "include_broll": include_broll,
-                    "processing_mode": processing_mode,
-                },
-            )
-        except Exception:
-            await db.rollback()
-            result = await db.execute(
-                text("""
-                    INSERT INTO tasks (
-                        id, user_id, source_id, status, font_family, font_size, font_color,
-                        created_at, updated_at
-                    )
-                    VALUES (
-                        :task_id, :user_id, :source_id, :status, :font_family, :font_size, :font_color,
-                        NOW(), NOW()
-                    )
-                    RETURNING id
-                """),
-                {
-                    "task_id": task_id,
-                    "user_id": user_id,
-                    "source_id": source_id,
-                    "status": status,
-                    "font_family": font_family,
-                    "font_size": font_size,
-                    "font_color": font_color,
-                },
-            )
+        result = await db.execute(
+            text("""
+                INSERT INTO tasks (
+                    id, user_id, source_id, status, font_family, font_size, font_color,
+                    caption_template, include_broll, processing_mode,
+                    created_at, updated_at
+                )
+                VALUES (
+                    :task_id, :user_id, :source_id, :status, :font_family, :font_size, :font_color,
+                    :caption_template, :include_broll, :processing_mode,
+                    NOW(), NOW()
+                )
+                RETURNING id
+            """),
+            {
+                "task_id": task_id,
+                "user_id": user_id,
+                "source_id": source_id,
+                "status": status,
+                "font_family": font_family,
+                "font_size": font_size,
+                "font_color": font_color,
+                "caption_template": caption_template,
+                "include_broll": include_broll,
+                "processing_mode": processing_mode,
+            },
+        )
         await db.commit()
         task_id = result.scalar()
         if not task_id:
@@ -95,27 +70,15 @@ class TaskRepository:
         db: AsyncSession, task_id: str
     ) -> Optional[Dict[str, Any]]:
         """Get task by ID with source information."""
-        try:
-            result = await db.execute(
-                text("""
-                    SELECT t.*, s.title as source_title, s.type as source_type, s.url as source_url
-                    FROM tasks t
-                    LEFT JOIN sources s ON t.source_id = s.id
-                    WHERE t.id = :task_id
-                """),
-                {"task_id": task_id},
-            )
-        except Exception:
-            await db.rollback()
-            result = await db.execute(
-                text("""
-                    SELECT t.*, s.title as source_title, s.type as source_type
-                    FROM tasks t
-                    LEFT JOIN sources s ON t.source_id = s.id
-                    WHERE t.id = :task_id
-                """),
-                {"task_id": task_id},
-            )
+        result = await db.execute(
+            text("""
+                SELECT t.*, s.title as source_title, s.type as source_type, s.url as source_url
+                FROM tasks t
+                LEFT JOIN sources s ON t.source_id = s.id
+                WHERE t.id = :task_id
+            """),
+            {"task_id": task_id},
+        )
         row = result.fetchone()
 
         if not row:
@@ -128,24 +91,20 @@ class TaskRepository:
             "source_title": row.source_title,
             "source_type": row.source_type,
             "status": row.status,
-            "progress": getattr(row, "progress", None),
-            "progress_message": getattr(row, "progress_message", None),
             "generated_clips_ids": row.generated_clips_ids,
             "font_family": row.font_family,
             "font_size": row.font_size,
             "font_color": row.font_color,
-            "caption_template": getattr(row, "caption_template", "default"),
-            "include_broll": getattr(row, "include_broll", False),
-            "processing_mode": getattr(row, "processing_mode", "fast"),
-            "cache_hit": getattr(row, "cache_hit", False),
-            "error_code": getattr(row, "error_code", None),
-            "stage_timings_json": getattr(row, "stage_timings_json", None),
-            "started_at": getattr(row, "started_at", None),
-            "completed_at": getattr(row, "completed_at", None),
-            "completion_notification_sent_at": getattr(
-                row, "completion_notification_sent_at", None
-            ),
-            "source_url": getattr(row, "source_url", None),
+            "caption_template": row.caption_template,
+            "include_broll": row.include_broll,
+            "processing_mode": row.processing_mode,
+            "cache_hit": row.cache_hit,
+            "error_code": row.error_code,
+            "stage_timings_json": row.stage_timings_json,
+            "started_at": row.started_at,
+            "completed_at": row.completed_at,
+            "completion_notification_sent_at": row.completion_notification_sent_at,
+            "source_url": row.source_url,
             "created_at": row.created_at,
             "updated_at": row.updated_at,
         }
@@ -240,49 +199,28 @@ class TaskRepository:
         include_broll: bool,
     ) -> None:
         """Update task styling settings."""
-        try:
-            await db.execute(
-                text(
-                    """
-                    UPDATE tasks
-                    SET font_family = :font_family,
-                        font_size = :font_size,
-                        font_color = :font_color,
-                        caption_template = :caption_template,
-                        include_broll = :include_broll,
-                        updated_at = NOW()
-                    WHERE id = :task_id
-                    """
-                ),
-                {
-                    "task_id": task_id,
-                    "font_family": font_family,
-                    "font_size": font_size,
-                    "font_color": font_color,
-                    "caption_template": caption_template,
-                    "include_broll": include_broll,
-                },
-            )
-        except Exception:
-            await db.rollback()
-            await db.execute(
-                text(
-                    """
-                    UPDATE tasks
-                    SET font_family = :font_family,
-                        font_size = :font_size,
-                        font_color = :font_color,
-                        updated_at = NOW()
-                    WHERE id = :task_id
-                    """
-                ),
-                {
-                    "task_id": task_id,
-                    "font_family": font_family,
-                    "font_size": font_size,
-                    "font_color": font_color,
-                },
-            )
+        await db.execute(
+            text(
+                """
+                UPDATE tasks
+                SET font_family = :font_family,
+                    font_size = :font_size,
+                    font_color = :font_color,
+                    caption_template = :caption_template,
+                    include_broll = :include_broll,
+                    updated_at = NOW()
+                WHERE id = :task_id
+                """
+            ),
+            {
+                "task_id": task_id,
+                "font_family": font_family,
+                "font_size": font_size,
+                "font_color": font_color,
+                "caption_template": caption_template,
+                "include_broll": include_broll,
+            },
+        )
         await db.commit()
 
     @staticmethod
@@ -363,10 +301,8 @@ class TaskRepository:
                     "source_title": row.source_title,
                     "source_type": row.source_type,
                     "status": row.status,
-                    "processing_mode": getattr(row, "processing_mode", "fast"),
-                    "completion_notification_sent_at": getattr(
-                        row, "completion_notification_sent_at", None
-                    ),
+                    "processing_mode": row.processing_mode,
+                    "completion_notification_sent_at": row.completion_notification_sent_at,
                     "clips_count": row.clips_count,
                     "created_at": row.created_at,
                     "updated_at": row.updated_at,
@@ -421,14 +357,12 @@ class TaskRepository:
 
         return {
             "task_id": row.id,
-            "notify_on_completion": getattr(row, "notify_on_completion", False),
-            "completion_notification_sent_at": getattr(
-                row, "completion_notification_sent_at", None
-            ),
-            "source_title": getattr(row, "source_title", None),
-            "user_email": getattr(row, "user_email", None),
-            "user_name": getattr(row, "user_name", None),
-            "user_first_name": getattr(row, "user_first_name", None),
+            "notify_on_completion": row.notify_on_completion,
+            "completion_notification_sent_at": row.completion_notification_sent_at,
+            "source_title": row.source_title,
+            "user_email": row.user_email,
+            "user_name": row.user_name,
+            "user_first_name": row.user_first_name,
         }
 
     @staticmethod
