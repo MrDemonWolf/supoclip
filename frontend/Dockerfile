@@ -71,7 +71,7 @@ ENV NEXT_PUBLIC_SELF_HOST=${NEXT_PUBLIC_SELF_HOST}
 RUN bun run build
 
 # Runner stage (for production)
-FROM base AS runner
+FROM base AS production
 WORKDIR /app
 
 ENV NODE_ENV=production
